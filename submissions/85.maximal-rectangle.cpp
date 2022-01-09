@@ -18,31 +18,33 @@ public:
         int m = matrix.size(), n = matrix[0].size();
         if (m == 0 || n == 0)
             return ret;
-        // 该元素所在列以该元素结尾的‘1’串的长度，可以理解为84题中的柱状图高度
-        vector<vector<int>> up(m, vector<int>(n, 0));
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if(matrix[i][j] == '1')
-                    up[i][j] = (i == 0 ? 0 : up[i - 1][j]) + 1;
-            }
-        }
+        vector<int> up(n, 0);
         // 需要将整个表每行当作一个柱状图进行理解
         for (int i = 0; i < m; ++i) {
             // 下面就是84题
             stack<int> stk;
             vector<int> left(n, -1), right(n, n);
             for (int j = 0; j < n; ++j) {
-                while (!stk.empty() && up[i][stk.top()] >= up[i][j]) {
+                // 该元素所在列以该元素结尾的‘1’串的长度，可以理解为84题中的柱状图高度
+                if (i == 0)
+                    up[j] = (matrix[i][j] == '1');
+                else {
+                    if (matrix[i][j] == '1')
+                        ++up[j];
+                    else
+                        up[j] = 0;
+                }
+                while (!stk.empty() && up[j] <= up[stk.top()]) {
                     right[stk.top()] = j;
                     stk.pop();
                 }
-                left[j] = stk.empty() ? -1 : stk.top();
+                if (!stk.empty()) {
+                    left[j] = stk.top();
+                }
                 stk.push(j);
             }
             for (int j = 0; j < n; ++j) {
-                int len = right[j] - left[j] - 1;
-                int area = up[i][j] * len;
-                ret = max(ret, area);
+                ret = max(ret, (right[j] - left[j] - 1) * up[j]);
             }
         }
         return ret;

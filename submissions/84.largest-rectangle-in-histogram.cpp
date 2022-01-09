@@ -39,6 +39,8 @@ public:
         for (int i = 0; i < n; ++i) {
             // 单调递增栈，相等元素记录较大的索引
             while (!stk.empty() && heights[i] <= heights[stk.top()]) {
+                //这里的right不保证对每个元素都正确， 如 5 5 6 4， right为 [1, 3, 3, 4]
+                //但是对于这道求最大矩形的题目已经足够了。
                 right[stk.top()] = i;
                 stk.pop();
             }
