@@ -16,13 +16,21 @@
 class Solution {
 public:
     ListNode *detectCycle(ListNode *head) {
+        if (!head)
+            return nullptr;
         ListNode *slow = head, *fast = head;
-        do {
-            if (!fast || !fast->next) return nullptr;
+        bool exist_circle = false; 
+        while (fast->next && fast->next->next) {
             fast = fast->next->next;
             slow = slow->next;
-        } while (slow != fast);
-        fast = head;
+            if (fast == slow) {
+                fast = head;
+                exist_circle = true;
+                break;
+            }
+        }
+        if (!exist_circle)
+            return nullptr;
         while (fast != slow) {
             fast = fast->next;
             slow = slow->next;
