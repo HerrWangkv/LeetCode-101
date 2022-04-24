@@ -12,20 +12,19 @@ class Solution
 {
 public:
     int trap(vector<int>& height) {
-        int n = height.size();
-        int left = 0, right = n - 1;
-        int leftMax = 0, rightMax = 0, ret = 0;
-        while (left < right) {
-            leftMax = max(leftMax, height[left]);
-            rightMax = max(rightMax, height[right]);
-            if (height[left] < height[right]) {
-                //也表明leftMax < rightMax
-                ret += leftMax - height[left];
-                ++left;
+        int l = 0, r = height.size() - 1;
+        int leftMax = height[l], rightMax = height[r];
+        int ret = 0;
+        while (l < r) {
+            if (leftMax < rightMax) {
+                ++l;
+                leftMax = height[l] > leftMax ? height[l] : leftMax;
+                ret += leftMax - height[l];
             }
             else {
-                ret += rightMax - height[right];
-                --right;
+                --r;
+                rightMax = height[r] > rightMax ? height[r] : rightMax;
+                ret += rightMax - height[r];
             }
         }
         return ret;

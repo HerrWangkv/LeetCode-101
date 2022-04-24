@@ -23,7 +23,6 @@ class Solution
 {
 public:
     TreeNode* helper(vector<int>& preorder, vector<int>& inorder, int pleft, int ileft, int n) {
-        //cout << pleft << ileft << n << endl;
         if (n == 0)
             return nullptr;
         TreeNode *root = new TreeNode(preorder[pleft]);

@@ -1,3 +1,11 @@
+// @before-stub-for-debug-begin
+#include <vector>
+#include <string>
+#include "commoncppproblem76.h"
+
+using namespace std;
+// @before-stub-for-debug-end
+
 /*
  * @lc app=leetcode id=76 lang=cpp
  *
@@ -13,47 +21,36 @@ using namespace std;
 class Solution {
 public:
     string minWindow(string s, string t) {
-        string ret;
-        int m = s.size(), n = t.size();
-        if (m < n)
-            return ret;
-        unordered_map<char, int> goal;
-        unordered_map<char, int> window;
-        int counter = 0; // determine whether this window contains all needed letters
-        int minLength = INT_MAX;
-        for (auto ch : t)
+        unordered_map<char, int> goal, win;
+        int count = 0;
+        for (auto ch : t) {
             ++goal[ch];
-        int left = 0, right = 0;
-        while (right < m) {
-            while (right < m && counter < n) {
-                if (goal.count(s[right])) {
-                    ++window[s[right]];
-                    if (window[s[right]] <= goal[s[right]])
-                        ++counter;
+            ++count;
+        }
+        int len = s.size();
+        string ret = "";
+        int i = 0, j = 0;
+        while (j < s.length()) {
+            while (j < s.length() && count) {
+                if (goal.count(s[j])) {
+                    if (goal[s[j]] > win[s[j]])
+                        --count;
+                    ++win[s[j]];
                 }
-                ++right;
+                ++j;
             }
-            //cout << right << " ";
-            while (left <= right - n)
-            {
-                if (!goal.count(s[left]) || (window[s[left]] > goal[s[left]]))
-                {
-                    --window[s[left]];
-                    ++left;
+            while (!count) {
+                if (goal.count(s[i])) {
+                    if (win[s[i]] == goal[s[i]])
+                        ++count;
+                    --win[s[i]];
                 }
-                else {
-                    break;
-                }
+                ++i;
             }
-            //cout << left << endl;
-            if (counter == n && (right - left) < minLength) {
-                minLength = (right - left);
-                //cout << minLength << endl;
-                ret = s.substr(left, minLength);
+            if (j - i + 1 <= len) {
+                ret = s.substr(i - 1, j - i + 1);
+                len = j - i + 1;
             }
-            --window[s[left]];
-            ++left;
-            --counter;
         }
         return ret;
     }

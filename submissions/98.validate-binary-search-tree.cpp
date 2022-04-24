@@ -1,3 +1,11 @@
+// @before-stub-for-debug-begin
+#include <vector>
+#include <string>
+#include "commoncppproblem98.h"
+
+using namespace std;
+// @before-stub-for-debug-end
+
 /*
  * @lc app=leetcode id=98 lang=cpp
  *
@@ -16,26 +24,22 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-#include <vector>
 using namespace std;
 class Solution
 {
 public:
-    vector<int> vec;
-    void inorder(TreeNode *root) {
+    long pre = LLONG_MIN; //不能使用INT_MIN,否则单节点[INT_MAX]会输出false
+    bool isValidBST(TreeNode* root) {
         if (!root)
-            return;
-        inorder(root->left);
-        vec.push_back(root->val);
-        inorder(root->right);
-    }
-    bool isValidBST(TreeNode *root)
-    {
-        inorder(root);
-        for (int i = 0; i < vec.size() - 1; ++i) {
-            if (vec[i] >= vec[i+1])
-                return false;
-        }
+            return true;
+        if (!isValidBST(root->left))
+            return false;
+        if (root->val <= pre)
+            return false;
+        // pre满足中序遍历顺序
+        pre = root->val;
+        if (!isValidBST(root->right))
+            return false;
         return true;
     }
 };

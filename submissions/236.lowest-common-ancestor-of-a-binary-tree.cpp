@@ -19,23 +19,20 @@ using namespace std;
 class Solution
 {
 public:
-    TreeNode *ret;
-    bool helper(TreeNode *root, TreeNode *p, TreeNode *q) {
-        //如果包含p或q即返回true
-        if (!root)
-            return false;
-        bool lson = helper(root->left, p, q);
-        bool rson = helper(root->right, p, q);
-        if ((lson && rson) || ((root->val == p->val || root->val == q->val) && (lson || rson)))
-            ret = root;
-        return lson || rson || root->val == p->val || root->val == q->val;
-    }
-
     TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
     {
-        ret = root;
-        helper(root, p, q);
-        return ret;
+        // 返回 p 或 q 
+        if (!root || root ==  p || root ==  q)
+            return root;
+        // l 和 r 只要不为空，则说明该子节点是 p 或 q 的祖先
+        TreeNode *l = lowestCommonAncestor(root->left,  p,  q);
+        TreeNode *r = lowestCommonAncestor(root->right,  p,  q);
+        // l 和 r 均空，说明该树中不存在pq
+        // l 和 r 有一个为空，说明 p 和 q 都在另一子树里。且由于递归，返回的就是最近祖先
+        if (!l || !r)
+            return l ? l : r;
+        // 左右子树都是，说明一边一个，则根节点为最近祖先
+        return root;
     }
 };
 // @lc code=end

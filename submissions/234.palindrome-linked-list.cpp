@@ -17,39 +17,38 @@
  */
 class Solution {
 public:
-    bool isPalindrome(ListNode* head) {
-        int n = 0;
-        ListNode *mid = EndofFirstHalf(head);
-        ListNode *end = reverseList(mid->next);
-        bool ret = true;
-        ListNode *p1 = head, *p2 = end;
-        while (ret && p2) {
-            if (p1->val != p2->val) {
-                ret = false;
-            }
-            p1 = p1->next;
-            p2 = p2->next;
-        }
-        mid->next = reverseList(end);
-        return ret;
-    }
     ListNode *reverseList(ListNode *head) {
-        ListNode *prev = nullptr, *cur = head;
-        while (cur) {
-            ListNode *tmp = cur->next;
-            cur->next = prev;
-            prev = cur;
-            cur = tmp;
+        if (!head)
+            return nullptr;
+        ListNode *head1 = head, *head2 = head->next;
+        head->next = nullptr;
+        while(head2) {
+            ListNode *tmp = head2->next;
+            head2->next = head1;
+            head1 = head2;
+            head2 = tmp;
         }
-        return prev;
+        return head1;
     }
-    ListNode *EndofFirstHalf(ListNode* head) {
+    bool isPalindrome(ListNode* head) {
+        if (!head || !head->next)
+            return true;
         ListNode *fast = head, *slow = head;
-        while (fast->next && fast->next->next) {
-            fast = fast->next->next; //赋值后的fast必不是nullptr
+        while (fast->next) {
+            slow = slow->next;
+            fast = fast->next;
+            if (fast->next)
+                fast = fast->next;
+        }
+        // the second half starting from slow can not be longer than the first half
+        slow = reverseList(slow);
+        while(slow) {
+            if (head->val != slow->val)
+                return false;
+            head = head->next;
             slow = slow->next;
         }
-        return slow;
+        return true;
     }
 };
 // @lc code=end

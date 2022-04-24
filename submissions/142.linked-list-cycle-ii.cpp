@@ -18,19 +18,16 @@ public:
     ListNode *detectCycle(ListNode *head) {
         if (!head)
             return nullptr;
-        ListNode *slow = head, *fast = head;
-        bool exist_circle = false; 
-        while (fast->next && fast->next->next) {
-            fast = fast->next->next;
-            slow = slow->next;
-            if (fast == slow) {
-                fast = head;
-                exist_circle = true;
-                break;
+        ListNode *fast = head, *slow = head;
+        do {
+            if (fast && fast->next) {
+                slow = slow->next;
+                fast = fast->next->next;
             }
-        }
-        if (!exist_circle)
-            return nullptr;
+            else 
+                return nullptr;
+        } while (fast != slow);
+        fast = head;
         while (fast != slow) {
             fast = fast->next;
             slow = slow->next;

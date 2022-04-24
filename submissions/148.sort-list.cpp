@@ -17,55 +17,44 @@
  */
 class Solution {
 public:
-    ListNode* sortList(ListNode* head) {
-        return helper(head, nullptr);
-    }
-    ListNode* helper(ListNode *head, ListNode*tail) {
-        // sort head to tail->prev
-        if (!head)
-            return nullptr;
-        if (head->next == tail) {
-            head->next = nullptr;
-            return head;
-        }
-        ListNode* slow = head, *fast = head;
-        while (fast != tail) {
-            slow = slow->next;
-            fast = fast->next;
-            if (fast != tail) {
-                fast = fast->next;
-            }
-        }
-        return merge(helper(head, slow), helper(slow, tail));
-    }
-    ListNode *merge(ListNode *head1, ListNode *head2) {
-        if (!head1 && !head2)
-            return nullptr;
+    ListNode *mergeList(ListNode *head1, ListNode *head2) {
         if (!head1)
             return head2;
         if (!head2)
             return head1;
-        ListNode *ret = new ListNode(), *tail = ret;
+        ListNode *head = new ListNode(0);
+        ListNode *node = head;
         while (head1 && head2) {
-            if (head1->val <= head2->val) {
-                tail->next = head1;
+            if (head1->val < head2->val) {
+                node->next = head1;
                 head1 = head1->next;
-                tail = tail->next;
             }
             else {
-                tail->next = head2;
+                node->next = head2;
                 head2 = head2->next;
-                tail = tail->next;
-
             }
+            node = node->next;
         }
-        if (head1)
-            tail->next = head1;
-        else
-            tail->next = head2;
-        tail = ret->next;
-        delete ret;
-        return tail;
+        node->next = head1 ? head1 : head2;
+        node = head->next;
+        delete head;
+        return node;
+    }
+    ListNode* sortList(ListNode* head) {
+        //归并排序
+        if (!head || !head->next)
+            return head;
+        //必须使用prev，因为slow才是中点。不然链表长度为2时分不开
+        ListNode *fast = head, *slow = head, *prev;
+        while(fast->next) {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next;
+            if (fast->next)
+                fast = fast->next;
+        }
+        prev->next = nullptr;   
+        return mergeList(sortList(head), sortList(slow));
     }
 };
 // @lc code=end

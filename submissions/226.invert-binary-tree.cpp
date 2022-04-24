@@ -18,17 +18,13 @@
  */
 class Solution {
 public:
-    void helper(TreeNode *root) {
-        if (!root)
-            return;
-        TreeNode *tmp = root->left;
-        root->left = root->right;
-        root->right = tmp;
-        helper(root->left);
-        helper(root->right);
-    }
     TreeNode* invertTree(TreeNode* root) {
-        helper(root);
+        if (!root)
+            return nullptr;
+        // Need to generate a copy of root->left
+        TreeNode *tmp = root->left;
+        root->left = invertTree(root->right);
+        root->right = invertTree(tmp);
         return root;
     }
 };
