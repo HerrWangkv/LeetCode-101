@@ -11,26 +11,21 @@ class Solution
 {
 public:
     vector<vector<int>> ret;
-    int n;
-
-    void helper(vector<int> &nums, int pos, vector<int> &current)
-    {
-        if (pos == n) {
-            ret.push_back(current);
+    void backtracking(vector<int> &num, int pos) {
+        if (pos == num.size()) {
+            ret.push_back(num);
             return;
-        }
-        for (int i = 0; i <= current.size(); ++i) {
-            // gradually insert new digit into the permutation
-            current.insert(current.begin() + i, nums[pos]);
-            helper(nums, pos + 1, current);
-            current.erase(current.begin() + i);
+        }   
+        for (int i = pos; i < num.size(); ++i) {
+            // 假设pos-1已经定下来的情况下，则pos处需要考虑剩下的所有数字(包括原pos处的)的可能性
+            swap(num[pos], num[i]);
+            backtracking(num, pos + 1);
+            swap(num[pos], num[i]);
         }
     }
     vector<vector<int>> permute(vector<int> &nums)
-    {
-        n = nums.size();
-        vector<int> vec{};
-        helper(nums, 0, vec);
+    {        
+        backtracking(nums, 0);
         return ret;
     }
 };

@@ -14,7 +14,7 @@
     display(b=5)
     ```
 2. STL中容器的size函数的一个"bug":size函数输出一个**无符号数**，在size与负数进行比较时 `-1 < vec.size()`可能会输出`false`， 需要提前将size转化为有符号数`-1 < int(vec.size())`
-3. cpp中子字符串：`str.substr(i, sz)`.其中i为初识字符索引，sz为子字符串长度。注意i必须在规定范围内，否则输出一个out_of_range错误。
+3. cpp中子字符串：`str.substr(i, sz)`.其中i为初始字符索引，sz为子字符串长度。注意i必须在规定范围内，否则输出一个out_of_range错误。
 4. cpp中的优先队列默认优先输出大值：`priority_queue<int>`相当于`priority_queue<int, vector<int>, less<int>>`。第二项表示容器类型(必须基于数组)。第三项表示稍后pop的项所满足的条件， 可以为标准库定义的函数或函数类型，如 `priority_queue<int, vector<int>, decltype(&cmp)> q(cmp)`其中 q 为优先队列名，cmp为函数。
 5. cpp中如果`a`是一个array，那么`a`指的是指向首元素的指针，而`&a`类似于表示整个数组的指针,但两者包含的地址均为首元素地址。因此`a+1`指的是该数组第二个元素的地址，而`&a+1`相当于这个数组的尾后地址，但`&a+1`类型是数组指针，而不是元素指针，故设计成该指针的值与地址实际相同。因此在将array赋值给一个vector时，可以`vector<int>(a, *(&a + 1))`
 6. cpp中的`std::find`只是一个迭代器的for循环。

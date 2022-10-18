@@ -17,8 +17,8 @@ public:
         int n = heights.size();
         int ret = 0;
         stack<int> stk;
-        vector<int> left(n, -1); //记录左侧最近的比当前元素小的元素的索引
-        vector<int> right(n, n); //记录右侧最近的比当前元素小的元素的索引
+        vector<int> left(n, -1); //记录左侧最近的小于当前元素的元素的索引。没有则输出 -1
+        vector<int> right(n, n); //记录右侧最近的小于等于当前元素的元素的索引。没有则输出 size
         /*
         for (int i = 0; i < n; ++i) {
             // 单调递增栈，相等元素记录较大的索引
@@ -39,8 +39,6 @@ public:
         for (int i = 0; i < n; ++i) {
             // 单调递增栈，相等元素记录较大的索引
             while (!stk.empty() && heights[i] <= heights[stk.top()]) {
-                //这里的right不保证对每个元素都正确， 如 5 5 6 4， right为 [1, 3, 3, 4]
-                //但是对于这道求最大矩形的题目已经足够了。
                 right[stk.top()] = i;
                 stk.pop();
             }
@@ -48,6 +46,7 @@ public:
             stk.push(i);
         }
         for (int i = 0; i < n; ++i) {
+            cout << left[i] << right[i] << endl;
             ret = max(ret, heights[i] * (right[i] - left[i] - 1));
         }
         return ret;
